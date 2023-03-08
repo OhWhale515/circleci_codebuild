@@ -1,53 +1,17 @@
 version: 2.1
-orbs:
-  python: circleci/python@0.2.1
+
 jobs:
-  build-and-test:
-    docker:
-      - image: "cimg/python:3.10.2"
-    steps:
-      - checkout
-      - run:
-          name: Install Python Packages
-          command: |
-            sudo apt-get update && sudo apt-get install -y python3-pip
-            pip install boto3
-      - run:
-          name: Run CF Script
-          command: python run_cf_template.py
 
-  deploy-to-test:
-    docker:
-      - image: "amazon/aws-cli:latest"
-    steps:
-      - run:
-          name: Deploy to Test
-          command: |
-            aws s3 cp index.html s3://codebuild-beta/index.html
-
-  deploy-to-prod:
-    docker:
-      - image: "amazon/aws-cli:latest"
-    steps:
-      - run:
-          name: Deploy to Prod
-          command: |
-            aws s3 cp index.html s3://codebuild-prod515/index.html
-
-workflows:
-  workflow:
-    jobs:
-      - build-and-test
-      - deploy-to-test:
+      - deploy_beta:
           requires:
-            - build-and-test
-          filters:
-            branches:
-              only:
-                - develop
-      - deploy-to-prod:
+            - hold
+      - pre_prod_hold:
+          type: approval
           requires:
-            - build-and-test
+            - deploy_beta
+      - deploy_prod:
+          requires:
+            - pre_prod_hold
           filters:
             branches:
               only:
