@@ -1,0 +1,18 @@
+{
+    "name": "Beta-Prod-CodeBuild",
+    "source": {
+        "type": "GITHUB",
+        "location": "https://github.com/OhWhale515/circleci_codebuild.git"
+    },
+    "environment": {
+        "computeType": "BUILD_GENERAL1_SMALL",
+        "image": "aws/codebuild/java:openjdk-8",
+        "type": "LINUX_CONTAINER"
+    },
+    "timeoutInMinutes": 60,
+    "logConfig": {
+        "cloudWatchLogs": {
+            "status": "ENABLED"
+        }
+    }  
+}
