@@ -1,0 +1,2 @@
+   - aws s3 cp index.html s3://codebuild-beta/index.html
+   - aws s3 cp index.html s3://codebuild-prod515

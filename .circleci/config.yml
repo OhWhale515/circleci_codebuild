@@ -1,46 +1,49 @@
 version: 2.1
 
-orbs:
-  python: circleci/python@1.5.0
-
-# Define a job to be invoked later in a workflow.
-# See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
-  build-and-test: # This is the name of the job, feel free to change it to better match what you're trying to do!
+  build-and-test:
     docker:
-      - image: cimg/python:3.10.2
+      - image: "cimg/python:3.10.2"
     steps:
       - checkout
       - python/install-packages:
           pkg-manager: pip
-          # app-dir: ~/project/package-directory/  # If you're requirements.txt isn't in the root directory.
-          # pip-dependency-file: test-requirements.txt  # if you have a different name for your requirements file, maybe one that combines your runtime and test requirements.
       - run:
           name: Run CF Script
           command: python run_cf_template.py
 
-# Invoke jobs via workflows
-# See: https://circleci.com/docs/2.0/configuration-reference/#workflows
+  deploy-to-test:
+    docker:
+      - image: "amazon/aws-cli:latest"
+    steps:
+      - run:
+          name: Deploy to Test
+          command: |
+            aws s3 cp index.html s3://codebuild-beta/index.html
+
+  deploy-to-prod:
+    docker:
+      - image: "amazon/aws-cli:latest"
+    steps:
+      - run:
+          name: Deploy to Prod
+          command: |
+            aws s3 cp index.html s3://codebuild-prod515/index.html
+
 workflows:
-  sample: # This is the name of the workflow, feel free to change it to better match your workflow.
-    # Inside the workflow, you define the jobs you want to run.
+  sample:
     jobs:
       - build-and-test
-       
-      - hold:
-          type: approval
+      - deploy-to-test:
           requires:
-            - deploy_test
-      - deploy_beta:
+            - build-and-test
+          filters:
+            branches:
+              only:
+                - develop
+      - deploy-to-prod:
           requires:
-            - hold
-      - pre_prod_hold:
-          type: approval
-          requires:
-            - deploy_beta
-      - deploy_prod:
-          requires:
-            - pre_prod_hold
+            - build-and-test
           filters:
             branches:
               only:
