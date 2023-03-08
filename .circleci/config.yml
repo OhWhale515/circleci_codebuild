@@ -1,19 +1,6 @@
 version: 2.1
 
 jobs:
-  build-and-test:
-    docker:
-      - image: "cimg/python:3.10.2"
-    steps:
-      - checkout
-      - run:
-          name: Install Python Dependencies
-          command: |
-            pip install -r requirements.txt
-      - run:
-          name: Run Script
-          command: C:\Users\sterl\OneDrive\Documents\GitHub\circleci_codebuild\.circleci\script.py
-
 
   deploy-to-beta:
     docker:
