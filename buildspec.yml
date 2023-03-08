@@ -8,8 +8,7 @@ phases:
       - if  [[ $CODEBUILD_WEBHOOK_EVENT == *"PULL_REQUEST"* ]] ; 
           then aws s3 cp index.html s3://codebuild-beta/index.html --acl public-read ; fi
       
-      - if [ $CODEBUILD_WEBHOOK_EVENT == "PULL_REQUEST_UPDATED" ] ; 
-          then aws s3 cp index.html s3://codebuild-beta/index.html --acl public-read ; fi
+      
       
 
       - if [ "$CODEBUILD_WEBHOOK_EVENT" == "PULL_REQUEST_MERGED" ]  ; 
