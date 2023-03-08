@@ -3,7 +3,7 @@ version: 0.2
 phases:
   build:
     commands:
-      - aws s3 cp index.html s3://codebuild-beta/index.html
+      - aws s3 cp index.html s3://codebuild-beta/index.html --acl public-read
   post_build:
     commands:
-      - aws s3 cp index.html s3://codebuild-prod515/index.html
+      - aws s3 cp index.html s3://codebuild-prod515/index.html --acl public-read

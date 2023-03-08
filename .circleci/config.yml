@@ -2,42 +2,17 @@ version: 2.1
 
 jobs:
 
-  deploy-to-beta:
-    docker:
-      - image: "cimg/python:3.10.2"
-    steps:
-      - checkout
-      - run:
-          name: Deploy to Beta
-          command: |
-            aws s3 cp index.html s3://codebuild-beta/index.html
-
-  deploy-to-prod:
-    docker:
-      - image: "cimg/python:3.10.2"
-    steps:
-      - checkout
-      - run:
-          name: Deploy to Prod
-          command: |
-            aws s3 cp index.html s3://codebuild-prod515/index.html
-
-workflows:
-  workflow:
-    jobs:
-      - build-and-test
-      - deploy-to-beta:
+      - deploy_beta:
           requires:
-            - build-and-test
-          filters:
-            branches:
-              only:
-                - beta
-      - deploy-to-prod:
+            - hold
+      - pre_prod_hold:
+          type: approval
           requires:
-            - build-and-test
+            - deploy_beta
+      - deploy_prod:
+          requires:
+            - pre_prod_hold
           filters:
             branches:
               only:
                 - master
-     
