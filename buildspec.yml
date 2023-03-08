@@ -7,3 +7,4 @@ phases:
   post_build:
     commands:
       - aws s3 cp .\index.html s3://codebuild-prod515/index.html --acl public-read
+
