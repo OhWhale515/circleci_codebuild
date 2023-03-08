@@ -1,0 +1,10 @@
+version: 0.2
+
+phases:
+  build:
+    commands:
+      - checkout
+      - aws s3 cp index.html s3://codebuild-beta/index.html
+  post_build:
+    commands:
+      - aws s3 cp index.html s3://codebuild-prod515/index.html
