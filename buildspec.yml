@@ -3,8 +3,8 @@ version: 0.2
 phases:
   build:
     commands:
-      - aws s3 cp index.html s3://codebuild-beta/index.html 
+      - if [ $CODEBUILD_WEBHOOK_EVENT == "PULL_REQUEST_CREATED" ]; then aws s3 cp index.html s3://codebuild-beta/index.html; fi 
   post_build:
     commands:
-      - aws s3 cp index.html s3://codebuild-prod515/index.html 
+       - if [ $CODEBUILD_WEBHOOK_EVENT == "PULL_REQUEST_MERGED" ]; then aws s3 cp index.html s3://codebuild-prod515/index.html; fi 
 
