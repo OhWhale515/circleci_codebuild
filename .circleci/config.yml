@@ -1,13 +1,17 @@
 version: 2.1
-
+orbs:
+  python: circleci/python@0.2.1
 jobs:
   build-and-test:
     docker:
       - image: "cimg/python:3.10.2"
     steps:
       - checkout
-      - python/install-packages:
-          pkg-manager: pip
+      - run:
+          name: Install Python Packages
+          command: |
+            sudo apt-get update && sudo apt-get install -y python3-pip
+            pip install boto3
       - run:
           name: Run CF Script
           command: python run_cf_template.py
