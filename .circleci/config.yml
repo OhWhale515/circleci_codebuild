@@ -1,19 +1,20 @@
 version: 2.1
 
-orbs:
-  awscli: circleci/awscli@1.5.0
-  
 jobs:
   build-and-test:
     docker:
       - image: "cimg/python:3.10.2"
     steps:
       - checkout
+
       - awscli/install
+
       - run:
-          name: Install Python Dependencies
+          name: Install Python Packages
           command: |
-            pip install -r requirements.txt
+            sudo apt-get update && sudo apt-get install -y python3-pip
+            pip install boto3
+
       - run:
           name: Run Script
           command: python script.py
