@@ -1,15 +1,11 @@
 version: 2.1
 
-orbs:
-  awscli: circleci/awscli@1.3.1
-  
 jobs:
   build-and-test:
     docker:
       - image: "cimg/python:3.10.2"
     steps:
       - checkout
-      - awscli/install
       - run:
           name: Install Python Dependencies
           command: |
@@ -23,7 +19,6 @@ jobs:
       - image: "cimg/python:3.10.2"
     steps:
       - checkout
-      - awscli/install
       - run:
           name: Deploy to Beta
           command: |
@@ -34,23 +29,10 @@ jobs:
       - image: "cimg/python:3.10.2"
     steps:
       - checkout
-      - awscli/install
       - run:
           name: Deploy to Prod
           command: |
             aws s3 cp index.html s3://codebuild-prod515/index.html
-
-
-  example:
-    docker:
-      - image: "cimg/python:3.10.2"
-    steps:
-      - checkout
-      - awscli/install
-      - run:
-          name: Example Job
-          command: |
-            echo "This is an example job, replace this with your own commands"
 
 workflows:
   workflow:
@@ -70,10 +52,4 @@ workflows:
             branches:
               only:
                 - master
-      - example:
-          requires:
-            - build-and-test
-          filters:
-            branches:
-              only:
-                - feature/*
+     
