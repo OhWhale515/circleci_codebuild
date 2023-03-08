@@ -31,7 +31,7 @@ jobs:
             aws s3 cp index.html s3://codebuild-prod515/index.html
 
 workflows:
-  sample:
+  workflow:
     jobs:
       - build-and-test
       - deploy-to-test:
