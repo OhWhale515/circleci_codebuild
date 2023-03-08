@@ -3,7 +3,9 @@ version: 0.2
 phases:
   build:
     commands:
-      - if [ "$CODEBUILD_WEBHOOK_EVENT" == "PULL_REQUEST_CREATED" ] && [ "$CODEBUILD_SOURCE_VERSION" != "refs/heads/master" ]; 
+      - echo $CODEBUILD_WEBHOOK_EVENT
+      - if [ "$CODEBUILD_WEBHOOK_EVENT" == "PULL_REQUEST_CREATED" ] && [ "$CODEBUILD_SOURCE_VERSION" != "refs/heads/main" ]; 
           then aws s3 cp index.html s3://codebuild-beta/index.html; fi
-      - if [ "$CODEBUILD_WEBHOOK_EVENT" == "PULL_REQUEST_MERGED" ] || [ "$CODEBUILD_SOURCE_VERSION" == "refs/heads/master" ]; 
+      
+      - if [ "$CODEBUILD_WEBHOOK_EVENT" == "PULL_REQUEST_MERGED" ] || [ "$CODEBUILD_SOURCE_VERSION" == "refs/heads/main" ]; 
           then aws s3 cp index.html s3://codebuild-prod515/index.html; fi
